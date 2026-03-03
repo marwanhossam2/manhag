@@ -1,0 +1,28 @@
+
+> my-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+- Environments: .env
+
+✓ Starting...
+✓ Ready in 1654ms
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+[next-auth][warn][NO_SECRET]
+https://next-auth.js.org/warnings#no_secret
+ GET /api/auth/signin 200 in 1971ms (compile: 1897ms, render: 73ms)
+ GET /api/auth/signin 200 in 34ms (compile: 22ms, render: 12ms)
+○ Compiling / ...
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+[next-auth][warn][NO_SECRET]
+https://next-auth.js.org/warnings#no_secret
+ GET / 200 in 10.3s (compile: 9.8s, render: 474ms)
+ GET /auth/register 200 in 835ms (compile: 709ms, render: 126ms)
+✓ Compiled in 84ms
+✓ Compiled in 175ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+✓ Compiled in 60ms

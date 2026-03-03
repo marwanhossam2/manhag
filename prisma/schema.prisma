@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  password      String?
+  image         String?
+  role          String    @default("STUDENT") // SQLite doesn't support ENUM natively, using String
+  twoFactorEnabled Boolean @default(false)
+  twoFactorSecret  String?
+
+  accounts      Account[]
+  sessions      Session[]
+
+  coursesGiven  Course[]  @relation("TeacherCourses")
+  enrollments   Enrollment[]
+  reviewsWritten Review[]
+  notifications Notification[]
+  revenue       Revenue[]
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  price       Float
+  teacherId   String
+  teacher     User     @relation("TeacherCourses", fields: [teacherId], references: [id])
+  enrollments Enrollment[]
+  reviews     Review[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Enrollment {
+  id        String   @id @default(cuid())
+  studentId String
+  courseId  String
+  student   User     @relation(fields: [studentId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([studentId, courseId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  content   String
+  rating    Int      // e.g. 1-5
+  studentId String
+  courseId  String
+  student   User     @relation(fields: [studentId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Revenue {
+  id        String   @id @default(cuid())
+  amount    Float
+  teacherId String
+  teacher   User     @relation(fields: [teacherId], references: [id])
+  month     Int      // e.g. 1 for Jan
+  year      Int
+  createdAt DateTime @default(now())
+
+  @@unique([teacherId, month, year])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

@@ -17,6 +17,7 @@ model User {
   role          String    @default("STUDENT") // SQLite doesn't support ENUM natively, using String
   twoFactorEnabled Boolean @default(false)
   twoFactorSecret  String?
+  signInCount   Int       @default(0) // Track sign-in count for 2FA prompt
 
   accounts      Account[]
   sessions      Session[]
